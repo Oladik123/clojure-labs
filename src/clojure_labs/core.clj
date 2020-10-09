@@ -18,7 +18,6 @@
   [inputLetters targets targetsSize targetIndex]
   (let [target  (first targets)
         restTargets (rest targets)]
-    ;(println inputLetters targets targetsSize targetIndex)
     (if
       (< targetIndex targetsSize)
       (intermediate inputLetters
