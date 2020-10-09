@@ -1,6 +1,6 @@
 (ns clojure-labs.utils)
 
-(defn tailed
+(defn- tailedMap
   [collection function result]
   (if (empty? collection)
     (apply list result)
@@ -11,7 +11,11 @@
     )
   )
 
+
+
 (defn myMap
   [collection function]
-  (tailed collection function []))
+  (let [mapReduceFunction (fn [accumulator item]
+                            (conj accumulator (function item)))]
+    (apply list (reduce mapReduceFunction [] collection))))
 
