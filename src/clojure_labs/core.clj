@@ -46,7 +46,7 @@
 
 (defn rightOrderedSequences
   [letters n]
-  (map (sequences letters n) reverse))
+  (myMap (sequences letters n) reverse))
 
 
 (println "element")
