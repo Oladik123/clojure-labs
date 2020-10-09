@@ -49,13 +49,11 @@
   (myMap (sequences letters n) reverse))
 
 
-(println "element")
-(println (element (list "a" "b" "c") "a" 0))
-
-(println "intermediate")
-(println (intermediate (list "a" "b" "c") (list "a" "b" "c") 3 0))
-
 (println "sequences")
-(println (sequences (list "a" "b" "c") 2) )
-
 (println (rightOrderedSequences (list "a" "b" "c") 2))
+
+(println "sequences without started with a")
+(println (myFilter (rightOrderedSequences (list "a" "b" "c") 2)
+                   (fn
+                     [item]
+                     (not= (first item) \a))))
