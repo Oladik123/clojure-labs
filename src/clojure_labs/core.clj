@@ -14,6 +14,18 @@
     )
   )
 
+(println "element")
+(println (element (list "a" "b" "c") "a" ()))
+
+(defn targetsWith
+  [inputLetters target]
+  (let
+    [appendTarget (fn [letter] (list (cons (first letter) target)))
+     ]
+    (map appendTarget inputLetters))
+  )
+
+
 (defn intermediate
   [inputLetters targets accumulator]
   (if
