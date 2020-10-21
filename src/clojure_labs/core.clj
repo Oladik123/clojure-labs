@@ -1,7 +1,7 @@
 (ns clojure-labs.core
   (:use [clojure-labs.utils]))
 
-(defn elementTailed
+(defn element
   [inputLetters target accumulator]
   (if (empty? inputLetters)
     accumulator
@@ -15,17 +15,13 @@
   )
 
 (defn intermediate
-  [inputLetters targets targetsSize targetIndex]
-  (let [target (first targets)
-        restTargets (rest targets)]
-    (if
-      (< targetIndex targetsSize)
-      (recur inputLetters
-             (concat restTargets (elementTailed inputLetters target ()))
-             targetsSize (+ targetIndex 1))
-      targets
-      )
-    ))
+  [inputLetters targets accumulator]
+  (if
+    (empty? targets)
+    accumulator
+    (recur inputLetters (rest targets) (concat accumulator (element inputLetters (first targets) ())))
+    )
+  )
 
 (defn sequencesTailed
   [inputLetters n targets seqLength]
@@ -33,12 +29,11 @@
     (recur
       inputLetters
       n
-      (intermediate inputLetters targets (count targets) 0)
+      (intermediate inputLetters targets ())
       (+ seqLength 1))
     targets
     )
   )
-
 
 (defn sequences
   [inputLetters n]
@@ -50,10 +45,10 @@
 
 
 (println "element")
-(println (elementTailed (list "a" "b" "c") "a" ()))
+(println (element (list "a" "b" "c") "a" ()))
 
 (println "intermediate")
-(println (intermediate (list "a" "b" "c") (list "a" "b" "c") 3 0))
+(println (intermediate (list "a" "b" "c") (list "a" "b" "c") ()))
 
 (println "sequences")
 (println (sequences (list "a" "b" "c") 2))
