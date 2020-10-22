@@ -17,13 +17,49 @@
 (println "element")
 (println (element (list "a" "b" "c") "a" ()))
 
-(defn targetsWith
-  [inputLetters target]
-  (let
-    [appendTarget (fn [letter] (list (cons (first letter) target)))
-     ]
-    (map appendTarget inputLetters))
+(defn extended-by-letter-word
+  "returns function that append provided letter to captured word and returns result"
+  [word]
+  (fn [letter]
+    (cons (first letter) word))
   )
+
+(defn collection-of-extended-by-letters-word
+  "returns function that append word to every element to collection of letters and returns new collection"
+  [letters]
+  (fn [word]
+    (map (extended-by-letter-word word) letters))
+  )
+
+(defn filtered-collection
+  [predicate collection-supplier]
+  (fn [& args]
+    (filter predicate (apply collection-supplier args)))
+  )
+
+
+(defn mapped-collection
+  [function collection-supplier]
+  (fn [& args]
+    (map function (apply collection-supplier args)))
+  )
+
+(println "new intermediate")
+(println
+  (apply
+    concat
+    (mapped-collection
+      (filtered-collection
+        (fn [word] (not= (first word) (first (rest word))))
+        (collection-of-extended-by-letters-word (list "a" "b" "c"))
+        )
+      (list "a" "b" "c")
+      )
+    )
+  )
+
+(defn mapped-collection )
+;;(println (filtered-words (map (partial word-started-with-letter "a") (list "a" "b" "c"))))
 
 
 (defn intermediate
@@ -62,4 +98,4 @@
 (println (sequences (list "a" "b" "c") 2))
 
 (println "result")
-(println (rightOrderedSequences (list "a" "b" "c" "d") 2))
+(println (rightOrderedSequences (list "a" "b" "c") 2))
