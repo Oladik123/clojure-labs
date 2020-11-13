@@ -1,8 +1,7 @@
 (ns clojure-labs.core
   (:use [clojure-labs.utils]))
 
-
-(defn integral
+(defn integrale
   [function iterations]
   (fn [argument]
     (let [step (/ argument iterations)]
@@ -16,9 +15,21 @@
   )
 
 
+
+
+
+(defn integrate
+  [function iterations argument]
+  ())
+
+(defn integral
+  [function iterations]
+  (partial integrate function iterations))
+
+
 (defn function
   [x]
   (* (- x (/ x 2)) (- x (/ x 2)))
   )
 
-(println ((integral function 1000) 100000))
+(println ((integral function 10000) 100))
