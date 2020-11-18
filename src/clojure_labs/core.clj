@@ -2,9 +2,9 @@
   (:use [clojure-labs.utils]))
 
 (defn integrale
-  [function iterations]
+  [function step]
   (fn [argument]
-    (let [step (/ argument iterations)]
+    (let []
       (* step
          (+ (/ (+ (function 0) (function argument)) 2)
             (apply + (map (fn [x] (function x)) (range 0 argument step)))
@@ -16,20 +16,49 @@
 
 
 
+(defn area
+  [function step argument]
+  (* step
+     (/ (+ (function argument) (function (- argument step)))
+        2)
+     )
+  )
 
+(def memoized-part-sum
+  (memoize
+    (fn [function step argument]
+      (print ".")
+      (+ (area function step argument)
+         (if (> argument 0)
+           (memoized-part-sum function step (- argument step))
+           0)
+         )
+      )
+    )
+  )
 
 (defn integrate
-  [function iterations argument]
-  ())
+  [function step argument]
+  (memoized-part-sum function step argument))
 
 (defn integral
-  [function iterations]
-  (partial integrate function iterations))
+  [function step]
+  (partial integrate function step))
 
 
 (defn function
   [x]
-  (* (- x (/ x 2)) (- x (/ x 2)))
+  x
   )
 
-(println ((integral function 10000) 100))
+
+
+(println ((integrale function 0.1) 10))
+(time ((integral function 0.1) 10))
+(time ((integral function 0.1) 10))
+(time ((integral function 0.1) 12))
+(time ((integral function 0.1) 21))
+(time ((integral function 0.1) 22))
+(time ((integral function 0.1) 22))
+
+
