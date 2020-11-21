@@ -14,32 +14,27 @@
     )
   )
 
-
-
 (defn area
   [function step argument]
   (* step
-     (/ (+ (function argument) (function (- argument step)))
-        2)
-     )
-  )
+     (/ (+ (function argument) (function (+ argument step)))
+        2)))
 
-(def memoized-part-sum
+
+(defn seq-generator
+  ([function step accumulator n]
+   (list (+ accumulator (area function step n))
+         (+ n step))))
+
+(def memoized-sum-seq
   (memoize
-    (fn [function step argument]
-      (print ".")
-      (+ (area function step argument)
-         (if (> argument 0)
-           (memoized-part-sum function step (- argument step))
-           0)
-         )
-      )
-    )
+    (fn [function step]
+      (iterate (partial apply seq-generator function step) (list 0 0))))
   )
 
 (defn integrate
   [function step argument]
-  (memoized-part-sum function step argument))
+  (first (nth (memoized-sum-seq function step) (/ argument step))))
 
 (defn integral
   [function step]
@@ -52,13 +47,13 @@
   )
 
 
-
-(println ((integrale function 0.1) 10))
-(time ((integral function 0.1) 10))
-(time ((integral function 0.1) 10))
-(time ((integral function 0.1) 12))
-(time ((integral function 0.1) 21))
-(time ((integral function 0.1) 22))
-(time ((integral function 0.1) 22))
+(println "naive " (time ((integrale function 0.1) 10)))
+(println "with warmup " (time ((integral function 0.1) 10)))
+(println "same as previous " (time ((integral function 0.1) 10)))
+(println "same as previous " (time ((integral function 0.1) 10)))
+(println "plus 2 " (time ((integral function 0.1) 12)))
+(println "plus 9 " (time ((integral function 0.1) 21)))
+(println "plus 1 " (time ((integral function 0.1) 22)))
+(println "same as previous " (time ((integral function 0.1) 22)))
 
 
