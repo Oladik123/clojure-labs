@@ -53,12 +53,14 @@
 
 
 
-(println ((integrale function 0.1) 10))
-(time ((integral function 0.1) 10))
-(time ((integral function 0.1) 10))
-(time ((integral function 0.1) 12))
-(time ((integral function 0.1) 21))
-(time ((integral function 0.1) 22))
-(time ((integral function 0.1) 22))
+(println ((integrale function 1) 10))
+(time ((integral function 1) 10))
+(time ((integral function 1) 10))
+(time ((integral function 1) 11))
+(time ((integral function 1) 12))
+(time ((integral function 1) 21))
+(time ((integral function 1) 22))
+(time ((integral function 1) 22))
+(time ((integral function 1) 5))
 
 
