@@ -19,7 +19,7 @@
   ([function step accumulator steps-from-zero]
    (print ".")
    (list (+ accumulator (area function step steps-from-zero))
-         (inc steps-from-zero))))     
+         (inc steps-from-zero))))
 
 (def memoized-sum-seq
   (memoize
@@ -29,7 +29,8 @@
 
 (defn integrate
   [function step-size argument]
-  (let [steps-to-zero (/ argument step-size)]
+  (print argument " ->> ")
+  (let [steps-to-zero (int (/ argument step-size))]
     (first (nth (memoized-sum-seq function step-size) steps-to-zero))))
 
 (defn integral
@@ -43,22 +44,21 @@
 (def stp 1/3)
 
 (println "naive " (time ((integrale function stp) 10)))
-(println "with warmup " 
-         (time ((integral function stp) 10)))
-(println "same as previous " 
-         (time ((integral function stp) 10)))
-(println "same as previous " 
-         (time ((integral function stp) 10)))
-(println "plus 2 "
-         (time ((integral function stp) 12)))
 
-(println "minus 2 "
-         (time ((integral function stp) 8)))
-(println "plus 9 "
-         (time ((integral function stp) 21)))
-(println "plus 1 "
-         (time ((integral function stp) 22)))
-(println "same as previous "
-         (time ((integral function stp) 22)))
+(time ((integral function stp) 10))
+(time ((integral function stp) 10))
+
+(time ((integral function stp) 10))
+
+(time ((integral function stp) 12))
+
+
+(time ((integral function stp) 8))
+
+(time ((integral function stp) 21))
+
+(time ((integral function stp) 22))
+
+(time ((integral function stp) 22))
 
 
