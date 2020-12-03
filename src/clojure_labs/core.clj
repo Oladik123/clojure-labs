@@ -15,22 +15,21 @@
   )
 
 
-
 (defn area
-  [function step argument]
+  [function step steps-to-zero]
   (* step
-     (/ (+ (function argument) (function (- argument step)))
+     (/ (+ (function (* steps-to-zero step)) (function (* (dec steps-to-zero) step)))
         2)
      )
   )
 
 (def memoized-part-sum
   (memoize
-    (fn [function step argument]
+    (fn [function step-size steps-to-zero]
       (print ".")
-      (+ (area function step argument)
-         (if (> argument 0)
-           (memoized-part-sum function step (- argument step))
+      (+ (area function step-size steps-to-zero)
+         (if (> steps-to-zero 0)
+           (memoized-part-sum function step-size (dec steps-to-zero))
            0)
          )
       )
@@ -38,13 +37,13 @@
   )
 
 (defn integrate
-  [function step argument]
-  (memoized-part-sum function step argument))
+  [function step-size argument]
+  (print argument " ->> ")
+  (memoized-part-sum function step-size (int (/ argument step-size))))
 
 (defn integral
   [function step]
   (partial integrate function step))
-
 
 (defn function
   [x]
@@ -52,15 +51,15 @@
   )
 
 
+(def stp 0.2342231234321)
 
-(println ((integrale function 1) 10))
-(time ((integral function 1) 10))
-(time ((integral function 1) 10))
-(time ((integral function 1) 11))
-(time ((integral function 1) 12))
-(time ((integral function 1) 21))
-(time ((integral function 1) 22))
-(time ((integral function 1) 22))
-(time ((integral function 1) 5))
+(time ((integral function stp) 10))
+(time ((integral function stp) 10))
+(time ((integral function stp) 11))
+(time ((integral function stp) 12))
+(time ((integral function stp) 21))
+(time ((integral function stp) 22))
+(time ((integral function stp) 22))
+(time ((integral function stp) 5))
 
 
