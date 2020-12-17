@@ -1,61 +1,32 @@
 (ns clojure-labs.core (:use [clojure-labs.utils]))
 
-(defn element
-  [inputLetters target letterIndex]
-  (if (>= letterIndex (count inputLetters))
-    ()
-    (if (not= (first target) (first (nth inputLetters letterIndex)))
-      (concat
-        (list (cons (first (nth inputLetters letterIndex)) target))
-        (element inputLetters target (+ letterIndex 1))
-        )
-      (element inputLetters target (+ letterIndex 1))
-      )
-    )
-  )
+(defn break-coll
+  [part-size coll]
+  (take-while #(not (empty? %))
+              (lazy-seq
+                (cons
+                  (take part-size coll)
+                  (break-coll part-size (drop part-size coll))))))
 
-(defn intermediate
-  [inputLetters targets targetsSize targetIndex]
-  (let [target  (first targets)
-        restTargets (rest targets)]
-    (if
-      (< targetIndex targetsSize)
-      (intermediate inputLetters
-                    (concat restTargets (element inputLetters target 0))
-                    targetsSize (+ targetIndex 1))
-      targets
-      )
-    ))
+(defn parallel-filter
+  [predicate part-size coll]
+  (->> coll
+       (break-coll part-size)
+       (map #(future (doall (filter predicate %))))
+       (doall)
+       (map deref)
+       (apply concat)))
 
-(defn sequencesTailed
-  [inputLetters n targets seqLength]
-  (if (<= seqLength n)
-    (sequencesTailed
-      inputLetters
-      n
-      (intermediate inputLetters targets (count targets) 0)
-      (+ seqLength 1))
-    targets
-    )
-  )
+(defn parallel-filter-by-threads
+  [threads predicate coll]
+  (parallel-filter predicate (/ (count coll) threads) coll))
 
+(def naturals (take 100 (iterate inc 0)))
+(def naturals2 (take 100 (iterate inc 0)))
 
-(defn sequences
-  [inputLetters n]
-  (sequencesTailed inputLetters n inputLetters 2))
+(defn heavy-even? [x] (do (Thread/sleep 100) (even? x)))
 
-(defn rightOrderedSequences
-  [letters n]
-  (myMap (sequences letters n) reverse))
+(def configured-parallel-filter (partial parallel-filter-by-threads 4))
 
-
-(println "element")
-(println (element (list "a" "b" "c") "a" 0))
-
-(println "intermediate")
-(println (intermediate (list "a" "b" "c") (list "a" "b" "c") 3 0))
-
-(println "sequences")
-(println (sequences (list "a" "b" "c") 2) )
-
-(println (rightOrderedSequences (list "a" "b" "c") 2))
+(time (doall (filter heavy-even? naturals)))
+(time (configured-parallel-filter heavy-even? naturals2))
