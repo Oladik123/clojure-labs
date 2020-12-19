@@ -9,7 +9,7 @@
                   (take part-size coll)
                   (split part-size (drop part-size coll))))))
 
-(defn heavy-even? [x] (do (Thread/sleep 10) true))
+(defn heavy-even? [x] (do (Thread/sleep 2000) (even? x)))
 
 (defn lazy-parallel-filter [sublist-size thread-count predicate coll]
   (->> (split (* sublist-size thread-count) coll)
@@ -18,11 +18,12 @@
                             ;(map #(future (doall (filter predicate %))))
                             (doall)
                             (map deref)
-                            (doall))))
+                            (doall)
+                            )))
        (apply concat)
        (apply concat)))
 
-(def configured-lazy-filter (partial lazy-parallel-filter 100 4))
+(def configured-lazy-filter (partial lazy-parallel-filter 2 4))
 
-(time (doall (take 1000 (configured-lazy-filter heavy-even? (iterate inc -10)))))
-(time (doall (take 1000 (filter heavy-even? (iterate inc 0)))))
+(time (doall (take 10 (configured-lazy-filter heavy-even? (iterate inc 0)))))
+(time (doall (take 10 (filter heavy-even? (iterate inc 0)))))
