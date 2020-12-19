@@ -25,7 +25,7 @@
 
 (defn heavy-even? [x] (do (Thread/sleep 100) (even? x)))
 
-(def configured-parallel-filter (partial parallel-filter-by-threads 1))
+(def configured-parallel-filter (partial parallel-filter-by-threads 4))
 
 (time (doall (filter heavy-even? naturals)))
 (time (configured-parallel-filter heavy-even? naturals))
