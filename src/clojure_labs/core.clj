@@ -9,9 +9,12 @@
                   (take part-size coll)
                   (split part-size (drop part-size coll))))))
 
-(defn heavy-even? [x] (do (Thread/sleep 2000) (even? x)))
+(defn heavy-even?
+  [x]
+  (do (Thread/sleep 2000) (even? x)))
 
-(defn lazy-parallel-filter [sublist-size thread-count predicate coll]
+(defn lazy-parallel-filter
+  [sublist-size thread-count predicate coll]
   (->> (split (* sublist-size thread-count) coll)
        (map (fn [list] (->> (split sublist-size list)
                             (map #(future (do (println "running") (doall (filter predicate %)))))
