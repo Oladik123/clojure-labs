@@ -1,17 +1,18 @@
-(ns clojure-labs.utils)
+(ns clojure-labs.utils (:use [clojure-labs.constant]
+                             [clojure-labs.variable]
+                             [clojure-labs.operations]))
+(defn stringify [expr]
+  (cond
+    (variable? expr) (name (first (args expr)))
+    (constant? expr) (str (first (args expr)))
+    (disj? expr) (str "(" (reduce #(str %1 " V " (stringify %2)) (stringify (first (args expr))) (rest (args expr))) ")")
+    (conj? expr) (str "(" (reduce #(str %1 " ^ " (stringify %2)) (stringify (first (args expr))) (rest (args expr))) ")")
+    (neg? expr) (str "!" (stringify (de-neg expr)))
+    :else ( "?" )))
 
-(defn tailed
-  [collection function result]
-  (if (empty? collection)
-    (apply list result)
-    (recur (rest collection)
-           function
-           (conj result
-                 (function (first collection))))
+(defn log-expression [expr]
+  (do
+    (println (stringify expr))
+    expr
     )
   )
-
-(defn myMap
-  [collection function]
-  (tailed collection function []))
-
