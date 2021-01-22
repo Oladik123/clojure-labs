@@ -1,14 +1,14 @@
 (ns clojure-labs.variable)
 
 (defn variable [name]
-  {:pre [(keyword? name)]}
+  {:pre [(keyword? name) (do (println "ctor" name) true)]}
   (list ::var name))
 
 (defn variable? [expr]
   (= (first expr) ::var))
 
 (defn variable-name [v]
-  {:pre [(keyword? name)]}
+  {:pre [(do (println "name" v) true) (variable? v)]}
   (second v))
 
 (defn variable-equals? [v1 v2]

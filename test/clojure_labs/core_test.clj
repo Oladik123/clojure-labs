@@ -68,5 +68,9 @@
                              ))))))
 
 
-(log-expression (dnf (impl (variable :a) (variable :b))))
-(run-all-tests)
+;(log-expression (dnf (impl (variable :a) (variable :b))))
+;(log-expression (dnf (disj (impl (variable :a) (variable :b)) (conj (variable :c) (variable :d)))))
+;(log-expression (dnf (disj (impl (variable :a) (variable :b)) (conj (variable :c) (variable :d)))))
+
+(log-expression (dnf (conj (impl (variable :a) (variable :b)) (conj (variable :c) (variable :d)))))
+(log-expression (dnf (disj (impl (variable :a) (variable :b)) (conj (variable :c) (variable :d)))))
